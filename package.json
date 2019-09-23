@@ -1,0 +1,21 @@
+{
+  "name": "nodebars",
+  "version": "0.0.1",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "node node_modules/nodemon/bin/nodemon.js app.js",
+    "ncu": "node node_modules/npm-check-updates/bin/ncu -u"
+  },
+  "engines": {
+    "node": "12.10.0"
+  },
+  "dependencies": {
+    "express": "4.17.1",
+    "body-parser": "1.19.0",
+    "pg": "7.12.1"
+  },
+  "devDependencies": {
+    "nodemon": "latest",
+    "npm-check-updates": "latest"
+  }
+}
