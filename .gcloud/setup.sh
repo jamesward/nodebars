@@ -25,10 +25,14 @@ else
   gcloud sql users set-password $db_user --instance=$service --password=$db_pass --project=$project
 fi
 
-# IAM
-#cloudsql.instances.connect
-
 gcloud beta run services update $service \
   --add-cloudsql-instances=$service \
-  --set-env-vars=DB_USER=$db_user,DB_PASS=$db_pass,DB_NAME=$db_name,CLOUD_SQL_CONNECTION_NAME=$service \
+  --set-env-vars=DB_USER=$db_user,DB_PASS=$db_pass,DB_NAME=$db_name,CLOUD_SQL_CONNECTION_NAME=$project:$region:$service \
   --platform=managed --project=$project --region=$region
+
+if [ -f "$3" ]; then
+  wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy
+  chmod +x cloud_sql_proxy
+  ./cloud_sql_proxy -instances=$project:$region:$service=tcp:5432 &
+  PGPASSWORD=$db_pass psql -h localhost -U $db_user < $3
+fi
