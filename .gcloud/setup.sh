@@ -31,8 +31,11 @@ gcloud beta run services update $service \
   --platform=managed --project=$project --region=$region
 
 if [ -f "$3" ]; then
-  wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy
-  chmod +x cloud_sql_proxy
+  if [ ! -f "cloud_sql_proxy" ]; then
+    wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy
+    chmod +x cloud_sql_proxy
+  fi
   ./cloud_sql_proxy -instances=$project:$region:$service=tcp:5432 &
+  sleep 30
   PGPASSWORD=$db_pass psql -h localhost -U $db_user < $3
 fi
