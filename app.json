@@ -1,0 +1,14 @@
+{
+  "hooks": {
+    "precreate": {
+      "commands": [
+        "gcloud/precreate.sh"
+      ]
+    },
+    "postcreate": {
+      "commands": [
+        "gcloud/postcreate.sh"
+      ]
+    }
+  }
+}
