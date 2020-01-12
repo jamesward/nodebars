@@ -10,10 +10,12 @@ declare db_user=postgres
 declare db_pass=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
 declare db_name=postgres
 
-gcloud sql instances describe $service --project=$project &> /dev/null
+# Once an instance is created with a name, you can never create another with the same name, even after it is deleted.
+# So we pick a random 8 numbers to append to the instance name.
+declare instance="$service-$(cat /dev/urandom | tr -dc '0-9' | fold -w 8 | head -n 1)"
 
-echo "Creating Cloud SQL instance for $service"
-gcloud sql instances create $service --database-version=POSTGRES_9_6 --tier=db-f1-micro --region=$region --project=$project --root-password=$db_pass
+echo "Creating Cloud SQL instance named $instance"
+gcloud sql instances create $instance --database-version=POSTGRES_9_6 --tier=db-f1-micro --region=$region --project=$project --root-password=$db_pass
 
 gcloud beta run services update $service \
   --add-cloudsql-instances=$service \
