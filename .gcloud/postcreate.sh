@@ -1,8 +1,11 @@
 #!/bin/bash
 
-declare project=$GCP_PROJECT
+set -euo pipefail
+set -x
+
+declare project=$GOOGLE_CLOUD_PROJECT
 declare service=$K_SERVICE
-declare region=$GCP_REGION
+declare region=$GOOGLE_CLOUD_REGION
 
 gcloud services enable sqladmin.googleapis.com --project=$project
 
@@ -23,8 +26,7 @@ gcloud beta run services update $service \
   --platform=managed --project=$project --region=$region
 
 #wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy
-curl https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 --output cloud_sql_proxy
-
+curl -s https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 --output cloud_sql_proxy
 chmod +x cloud_sql_proxy
 ./cloud_sql_proxy -instances=$project:$region:$instance=tcp:5432 &
 sleep 30
