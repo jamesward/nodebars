@@ -1,5 +1,8 @@
 #!/bin/bash
 
+which gcloud
+echo $PATH
+
 declare project=$GCP_PROJECT
 declare service=$K_SERVICE
 declare region=$GCP_REGION
