@@ -23,6 +23,9 @@ gcloud beta run services update $service \
   --platform=managed --project=$project --region=$region
 
 wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy
+
+echo "downloaded"
+
 chmod +x cloud_sql_proxy
 ./cloud_sql_proxy -instances=$project:$region:$instance=tcp:5432 &
 sleep 30
