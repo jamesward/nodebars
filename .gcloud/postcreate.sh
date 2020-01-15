@@ -1,8 +1,5 @@
 #!/bin/bash
 
-set -euo pipefail
-set -x
-
 declare project=$GOOGLE_CLOUD_PROJECT
 declare service=$K_SERVICE
 declare region=$GOOGLE_CLOUD_REGION
