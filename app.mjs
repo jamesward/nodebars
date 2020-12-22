@@ -4,10 +4,6 @@ import bodyParser from 'body-parser';
 
 const app = express();
 
-app.use(express.static('public'));
-app.use(bodyParser.urlencoded({ extended: false }));
-app.enable('trust proxy');
-
 async function devPostgres() {
   console.log('Starting Postgres');
 
@@ -34,7 +30,7 @@ async function devPostgres() {
   process.once('SIGTERM', stop);
 
   return {
-    host: container.getContainerIpAddress(),
+    host: container.getHost(),
     port: container.getMappedPort(5432),
     user: 'postgres',
     password: pgPassword,
@@ -50,6 +46,10 @@ async function getConnectionInfo() {
       database: process.env.DB_NAME,
       host: `/cloudsql/${process.env.CLOUD_SQL_CONNECTION_NAME}`
     };
+  }
+  else if (process.env.NODE_ENV === 'production') {
+    app.get('/', (req, res) => res.send("App Needs Setup"));
+    return null;
   }
   else {
     return await devPostgres();
@@ -75,6 +75,11 @@ async function getPool() {
 }
 
 const pool = await getPool();
+
+// order is important because non-setup apps needs to register a get / handler before these run
+app.use(express.static('public'));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.enable('trust proxy');
 
 app.get('/bars', async (req, res) => {
   const result = await pool.query('SELECT * FROM bar');

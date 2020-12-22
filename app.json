@@ -1,4 +1,10 @@
 {
+  "env": {
+    "NODE_ENV": {
+      "description": "Node Environment",
+      "value": "production"
+    }
+  },
   "hooks": {
     "postcreate": {
       "commands": [
